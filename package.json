@@ -1,0 +1,23 @@
+{
+  "name": "graphassetmodel",
+  "version": "0.0.1",
+  "description": "This package is a graph representation of asset models linking each other for blazing fast queries",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx mocha .\\ThreeDimensionMatrixSpec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LRagji/GraphAssetModel.git"
+  },
+  "author": "Laukik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LRagji/GraphAssetModel/issues"
+  },
+  "homepage": "https://github.com/LRagji/GraphAssetModel#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0"
+  }
+}
