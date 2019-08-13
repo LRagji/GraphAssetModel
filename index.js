@@ -78,4 +78,4 @@ model.markRelation(AssetList[1], RelationList[1], AssetList[2]);
 
 console.log("Consumed " + model.memorySize + " bytes.");
 
-console.log(model.getRelatedAsset(AssetList[0]));
+console.log(model.getRelatedWithAsset(AssetList[1],RelationList[0]));
