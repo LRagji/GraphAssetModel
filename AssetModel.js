@@ -8,13 +8,11 @@ module.exports = class AssetModel {
         this.getRelatedChildren = this.getRelatedChildren.bind(this);
 
         this._findIndexOf = this._findIndexOf.bind(this);
-        this._filterMap = this._filterMap.bind(this);
         this._model = new ThreeDimensionMatrix(assetList.length, assetList.length, relationList.length);
         this.memorySize = this._model.matrix.memorySize;
         this._assetList = assetList;
         this._relationList = relationList;
         this._identifierFunction = identifier;
-        this._marked = '1', this._unMarked = '0';
     }
 
     _findIndexOf(list, searchItem, selector) {
@@ -25,16 +23,6 @@ module.exports = class AssetModel {
             }
         }
 
-    }
-
-    _filterMap(inputList, mapList) {
-        let returnRelations = [];
-        for (let ctr = 0; ctr < inputList.length; ctr++) {
-            if (inputList[ctr] === this._marked) {
-                returnRelations.push(mapList[ctr]);
-            }
-        }
-        return returnRelations;
     }
 
     markRelation(fromAsset, withRelation, toAsset) {
@@ -55,9 +43,9 @@ module.exports = class AssetModel {
     getRelatedChildren(fromAsset, withRelation) {
         let fromIdx = this._findIndexOf(this._assetList, fromAsset, this._identifierFunction);
         let relationIdx = this._findIndexOf(this._relationList, withRelation, this._identifierFunction);
-        let toIds = this._model.read(fromIdx, undefined, relationIdx);
+        let toIndexs = this._model.read(fromIdx, undefined, relationIdx);
 
-        return this._filterMap(toIds, this._assetList);
+        return toIndexs.map(idx => this._assetList[idx]);
     }
 
     getRelatedParents(toAsset, withRelation) {

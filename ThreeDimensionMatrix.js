@@ -51,8 +51,8 @@ module.exports = class ThreeDimensionMatrix {
         //1|1|0|Return 1D Array                            |   2X+N*I
         //1|0|0|Return 2D Array                            |   X
         //0|0|1|Return 2D Array                            |   Yn*Xn*3X
-        //0|1|1|Return 1D Array                            |   Yn*3X
-        //1|0|1|Return 1D Array                            |   Xn*3X
+        //0|1|1|Return 1D Array                            |   Yn*3X+1I
+        //1|0|1|Return 1D Array                            |   Xn*3X+1I
         //0|1|0|Return 2D Array                            |   Yn*2X
 
 
@@ -91,7 +91,7 @@ module.exports = class ThreeDimensionMatrix {
             }
             return Yaxis;
         }
-        //0|1|1 Return 1D Array |TimeComplexity:Yn*3X
+        //0|1|1 Return 1D Array |TimeComplexity:Yn*3X+1I
         if (y == undefined & x !== undefined & z !== undefined) {
             let Yaxis = new Array();
             for (let YCounter = 0; YCounter < model.length; YCounter++) {
@@ -101,11 +101,13 @@ module.exports = class ThreeDimensionMatrix {
             }
             return Yaxis;
         }
-        //1|0|1 Return 1D Array |TimeComplexity:Xn*3X
+        //1|0|1 Return 1D Array |TimeComplexity:Xn*3X+1I
         if (y !== undefined & x == undefined & z !== undefined) {
             let Xaxis = new Array();
             for (let XCounter = 0; XCounter < model[y].length; XCounter++) {
-                Xaxis.push(model[y][XCounter][z]);
+                if (model[y][XCounter][z] === this._markValue) {
+                    Xaxis.push(XCounter);
+                }
             }
             return Xaxis;
         }

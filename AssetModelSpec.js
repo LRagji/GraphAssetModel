@@ -85,10 +85,15 @@ it('Asset Model: Validate childrens can be queried back when children exists wit
     let model = new targetType(AssetList, RelationList, (x) => x);
     model.markRelation(AssetList[0], RelationList[0], AssetList[1]);//A---R1---B
     model.markRelation(AssetList[1], RelationList[1], AssetList[2]);//B---R2---C
-    model.markRelation(AssetList[0], RelationList[0], AssetList[2]);//A---R1---C
+    model.markRelation(AssetList[0], RelationList[1], AssetList[2]);//A---R2---C
 
-    let assets = model.getRelatedChildren(AssetList[1], RelationList[0]);
-    expect(assets.length).to.equal(0);
+    let assets = model.getRelatedChildren(AssetList[0], RelationList[0]);
+    expect(assets.length).to.equal(1);
+    expect(assets).to.have.members([AssetList[1]]);
+
+    assets = model.getRelatedChildren(AssetList[0], RelationList[1]);
+    expect(assets.length).to.equal(1);
+    expect(assets).to.have.members([AssetList[2]]);
     done();
 });
 
@@ -102,8 +107,6 @@ it('Asset Model: Validate childrens can be queried back when no child exists', f
     expect(assets.length).to.equal(0);
     done();
 });
-
-//
 
 it('Asset Model: Validate parents can be queried back when multiple parents exists', function (done) {
     let model = new targetType(AssetList, RelationList, (x) => x);
