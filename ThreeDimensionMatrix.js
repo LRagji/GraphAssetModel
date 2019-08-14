@@ -55,69 +55,74 @@ module.exports = class ThreeDimensionMatrix {
         //1|0|1|Return 1D Array                            |   Xn*3X+1I
         //0|1|0|Return 2D Array                            |   Yn*2X
 
+        if (model == undefined) {
+            throw new Error("Model cannot be undefined");
+        }
+        let switchValue = 0;
+        if (y !== undefined) switchValue += 4;
+        if (x !== undefined) switchValue += 2;
+        if (z !== undefined) switchValue += 1;
 
-        //1|1|1 Return boolean value is they are connected. |TimeComplexity:3X
-        if (y !== undefined & x !== undefined & z !== undefined) {
-            return model[y][x][z] === this._markValue;
-        }
-        //0|0|0 Return 3D Array a.k.a Model |TimeComplexity:0
-        if (y == undefined & x == undefined & z == undefined) {
-            return model;
-        }
-        //1|1|0 Return 1D Array |TimeComplexity:2X+N*I
-        if (y !== undefined & x !== undefined & z == undefined) {
-            let Zaxis = model[y][x];
-            let returnResult = [];
-            Zaxis.forEach((element, idx) => {
-                if (element === this._markValue) {
-                    returnResult.push(idx);
+        let Yaxis = [], Xaxis = [], Zaxis = [];
+        let YCounter = 0, XCounter = 0;
+        switch (switchValue) {
+            case 0: //0|0|0
+                return model;
+
+            case 1: //0|0|1
+                Yaxis = new Array();
+                for (YCounter = 0; YCounter < model.length; YCounter++) {
+                    Xaxis = new Array();
+                    for (XCounter = 0; XCounter < model[YCounter].length; XCounter++) {
+                        Xaxis.push(model[YCounter][XCounter][z]);
+                    }
+                    Yaxis.push(Xaxis);
                 }
-            });
-            return returnResult;
-        }
-        //1|0|0 Return 2D Array |TimeComplexity:X
-        if (y !== undefined & x == undefined & z == undefined) {
-            return model[y];
-        }
-        //0|0|1 Return 2D Array |TimeComplexity:Yn*Xn*3X
-        if (y == undefined & x == undefined & z !== undefined) {
-            let Yaxis = new Array();
-            for (let YCounter = 0; YCounter < model.length; YCounter++) {
-                let Xaxis = new Array();
-                for (let XCounter = 0; XCounter < model[YCounter].length; XCounter++) {
-                    Xaxis.push(model[YCounter][XCounter][z]);
+                return Yaxis;
+
+            case 2: //0|1|0
+                Yaxis = new Array();
+                for (YCounter = 0; YCounter < model.length; YCounter++) {
+                    Yaxis.push(model[YCounter][x]);
                 }
-                Yaxis.push(Xaxis);
-            }
-            return Yaxis;
-        }
-        //0|1|1 Return 1D Array |TimeComplexity:Yn*3X+1I
-        if (y == undefined & x !== undefined & z !== undefined) {
-            let Yaxis = new Array();
-            for (let YCounter = 0; YCounter < model.length; YCounter++) {
-                if (model[YCounter][x][z] === this._markValue) {
-                    Yaxis.push(YCounter);
+                return Yaxis;
+
+            case 3: //0|1|1
+                Yaxis = new Array();
+                for (YCounter = 0; YCounter < model.length; YCounter++) {
+                    if (model[YCounter][x][z] === this._markValue) {
+                        Yaxis.push(YCounter);
+                    }
                 }
-            }
-            return Yaxis;
-        }
-        //1|0|1 Return 1D Array |TimeComplexity:Xn*3X+1I
-        if (y !== undefined & x == undefined & z !== undefined) {
-            let Xaxis = new Array();
-            for (let XCounter = 0; XCounter < model[y].length; XCounter++) {
-                if (model[y][XCounter][z] === this._markValue) {
-                    Xaxis.push(XCounter);
+                return Yaxis;
+
+            case 4: //1|0|0
+                return model[y];
+
+            case 5: //1|0|1
+                Xaxis = new Array();
+                for (XCounter = 0; XCounter < model[y].length; XCounter++) {
+                    if (model[y][XCounter][z] === this._markValue) {
+                        Xaxis.push(XCounter);
+                    }
                 }
-            }
-            return Xaxis;
-        }
-        //0|1|0 Return 2D Array |TimeComplexity:Yn*2X
-        if (y == undefined & x !== undefined & z == undefined) {
-            let Yaxis = new Array();
-            for (let YCounter = 0; YCounter < model.length; YCounter++) {
-                Yaxis.push(model[YCounter][x]);
-            }
-            return Yaxis;
+                return Xaxis;
+
+            case 6: //1|1|0
+                Zaxis = model[y][x];
+                let returnResult = [];
+                Zaxis.forEach((element, idx) => {
+                    if (element === this._markValue) {
+                        returnResult.push(idx);
+                    }
+                });
+                return returnResult;
+
+            case 7: //1|1|1
+                return model[y][x][z] === this._markValue;
+                
+            default:
+                throw new Error("Unknown query!");
         }
     }
 
