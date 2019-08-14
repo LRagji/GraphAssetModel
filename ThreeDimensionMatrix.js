@@ -34,42 +34,55 @@ module.exports = class ThreeDimensionMatrix {
         }
     }
 
-    read(model, y, x, z) { //TODO:Find Time complexities for all read Operations
-        //1|1|1 Return Single value
+    read(model, y, x, z) {
+        //TODO:Find Time complexities for all read Operations
+        //Given:
+        // X: Time taken to access array element with index.Eg: arr[idx]
+        // I: Time taken to Jump if else condition.
+        // Yn: Number of items on Y axis
+        // Xn: Number of items on X axis
+        // Zn: Number of items on Z axis
+        // Depending on the inputs given time complexity for the function is calculated below:
+        //Y|X|Z|    Return Value            |  Time Complexity
+        //1|1|1|Return Single value         |   3X
+        //0|0|0|Return 3D Array a.k.a Model |   0
+        //1|1|0|Return 1D Array             |   2X
+        //1|0|0|Return 2D Array             |   X
+        //0|0|1|Return 2D Array             |   Yn*Xn*3X
+        //0|1|1|Return 1D Array             |   Yn*3X
+        //1|0|1|Return 1D Array             |   Xn*3X
+        //0|1|0|Return 2D Array             |   Yn*2X
+
+        
+        //1|1|1 Return Single value |TimeComplexity:3X
         if (y !== undefined & x !== undefined & z !== undefined) {
             return model[y][x][z];
         }
-        //0|0|0 Return 3D Array a.k.a Model
+        //0|0|0 Return 3D Array a.k.a Model |TimeComplexity:0
         if (y == undefined & x == undefined & z == undefined) {
             return model;
         }
-        //1|1|0 Return 1D Array
+        //1|1|0 Return 1D Array |TimeComplexity:2X
         if (y !== undefined & x !== undefined & z == undefined) {
             return model[y][x];
         }
-        //1|0|0 Return 2D Array
+        //1|0|0 Return 2D Array |TimeComplexity:X
         if (y !== undefined & x == undefined & z == undefined) {
             return model[y];
         }
-        //0|0|1 Return 2D Array
+        //0|0|1 Return 2D Array |TimeComplexity:Yn*Xn*3X
         if (y == undefined & x == undefined & z !== undefined) {
             let Yaxis = new Array();
             for (let YCounter = 0; YCounter < model.length; YCounter++) {
                 let Xaxis = new Array();
                 for (let XCounter = 0; XCounter < model[YCounter].length; XCounter++) {
-                    //let Zaxis = new Array();
-                    // for (let ZCounter = z; ZCounter < z; ZCounter++) {
-                    //     Zaxis.push(defaultValue);
-                    //     memSize += 2;
-                    // }
                     Xaxis.push(model[YCounter][XCounter][z]);
                 }
                 Yaxis.push(Xaxis);
             }
-
             return Yaxis;
         }
-        //0|1|1 Return 1D Array
+        //0|1|1 Return 1D Array |TimeComplexity:Yn*3X
         if (y == undefined & x !== undefined & z !== undefined) {
             let Yaxis = new Array();
             for (let YCounter = 0; YCounter < model.length; YCounter++) {
@@ -77,7 +90,7 @@ module.exports = class ThreeDimensionMatrix {
             }
             return Yaxis;
         }
-        //1|0|1 Return 1D Array
+        //1|0|1 Return 1D Array |TimeComplexity:Xn*3X
         if (y !== undefined & x == undefined & z !== undefined) {
             let Xaxis = new Array();
             for (let XCounter = 0; XCounter < model[y].length; XCounter++) {
@@ -85,7 +98,7 @@ module.exports = class ThreeDimensionMatrix {
             }
             return Xaxis;
         }
-        //0|1|0 Return 2D Array
+        //0|1|0 Return 2D Array |TimeComplexity:Yn*2X
         if (y == undefined & x !== undefined & z == undefined) {
             let Yaxis = new Array();
             for (let YCounter = 0; YCounter < model.length; YCounter++) {
