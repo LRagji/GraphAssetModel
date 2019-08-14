@@ -66,7 +66,6 @@ it('Three Dimension Matrix: Mark and Get 1Dimension Array on 1st Axis', function
     }
 
     expect(target.read(undefined, x, z)).to.deep.equal(expectedArray);
-
     done();
 });
 
@@ -81,7 +80,6 @@ it('Three Dimension Matrix: Mark and Get 1Dimension Array on 2nd Axis', function
     }
 
     expect(target.read(y, undefined, z)).to.deep.equal(expectedArray);
-
     done();
 });
 
@@ -113,10 +111,8 @@ it('Three Dimension Matrix: Mark and Get 2Dimension on 2nd & 3rd Axis', function
         expected2DArray.push(temp);
     }
 
-    let result = target.read(y, undefined, undefined);
-    for (let Xcounter = 0; Xcounter < target.dimensionSize.XMax; Xcounter++) {
-        expect(result[Xcounter]).to.deep.equal(expected2DArray[Xcounter]);
-    }
+    let results = target.read(y, undefined, undefined);
+    expect(results).to.deep.equal(expected2DArray);
     done();
 });
 
@@ -134,9 +130,8 @@ it('Three Dimension Matrix: Mark and Get 2Dimension on 1st & 2nd Axis', function
         expected2DArray.push(temp);
     }
 
-    for (let Ycounter = 0; Ycounter < target.dimensionSize.YMax; Ycounter++) {
-        expect(target.read(Ycounter, undefined, z)).to.deep.equal(expected2DArray[Ycounter]);
-    }
+    let results = target.read(undefined, undefined, z);
+    expect(results).to.deep.equal(expected2DArray);
     done();
 });
 
@@ -154,8 +149,7 @@ it('Three Dimension Matrix: Mark and Get 2Dimension on 1st & 3rd Axis', function
         expected2DArray.push(temp);
     }
 
-    for (let Zcounter = 0; Zcounter < target.dimensionSize.ZMax; Zcounter++) {
-        expect(target.read(undefined, x, Zcounter)).to.deep.equal(expected2DArray[Zcounter]);
-    }
+    let results = target.read(undefined, x, undefined);
+    expect(results).to.deep.equal(expected2DArray);
     done();
 });
