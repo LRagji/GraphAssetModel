@@ -4,8 +4,8 @@ module.exports = class AssetModel {
     constructor(assetList, relationList, identifier = (obj) => obj.id) {
         this.markRelation = this.markRelation.bind(this);
         this.getRelationsBetween = this.getRelationsBetween.bind(this);
-        this.getRelatedWithAsset = this.getRelatedWithAsset.bind(this);
-        this.getRelatedAsset = this.getRelatedAsset.bind(this);
+        this.getRelatedParents = this.getRelatedParents.bind(this);
+        this.getRelatedChildren = this.getRelatedChildren.bind(this);
 
         this._findIndexOf = this._findIndexOf.bind(this);
         this._filterMap = this._filterMap.bind(this);
@@ -52,7 +52,7 @@ module.exports = class AssetModel {
         return this._filterMap(relations, this._relationList);
     }
 
-    getRelatedAsset(fromAsset, withRelation) {
+    getRelatedChildren(fromAsset, withRelation) {
         let fromIdx = this._findIndexOf(this._assetList, fromAsset, this._identifierFunction);
         let relationIdx = this._findIndexOf(this._relationList, withRelation, this._identifierFunction);
         let toIds = this._model.read(fromIdx, undefined, relationIdx);
@@ -60,7 +60,7 @@ module.exports = class AssetModel {
         return this._filterMap(toIds, this._assetList);
     }
 
-    getRelatedWithAsset(toAsset, withRelation) {
+    getRelatedParents(toAsset, withRelation) {
         let toIdx = this._findIndexOf(this._assetList, toAsset, this._identifierFunction);
         let relationIdx = this._findIndexOf(this._relationList, withRelation, this._identifierFunction);
         let fromIds = this._model.read(undefined, toIdx, relationIdx);

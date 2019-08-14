@@ -30,7 +30,7 @@ it('Asset Model: Validate childrens can be queried back', function (done) {
     model.markRelation(AssetList[1], RelationList[1], AssetList[2]);//B---R2---C
     model.markRelation(AssetList[0], RelationList[0], AssetList[2]);//A---R1---C
 
-    let assets = model.getRelatedAsset(AssetList[0], RelationList[0]);
+    let assets = model.getRelatedChildren(AssetList[0], RelationList[0]);
     expect(assets.length).to.equal(2);
     expect(assets).to.have.members([AssetList[1], AssetList[2]]);
     done();
