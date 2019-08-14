@@ -1,7 +1,7 @@
 let expect = require('chai').expect;
 let targetType = require('./ThreeDimensionMatrix');
 
-it('Three Dimension Matrix:Calculate correct memory size & axis length', function (done) {
+it('Three Dimension Matrix: Calculate correct memory size & axis length', function (done) {
     let size = 10;
     let charByteSize = 2;
     let target = new targetType(size, size, size);
@@ -16,7 +16,7 @@ it('Three Dimension Matrix:Calculate correct memory size & axis length', functio
     done();
 });
 
-it('Three Dimension Matrix:Mark and Get same index on 3rd Axis', function (done) {
+it('Three Dimension Matrix: Mark and Get same index on 3rd Axis', function (done) {
     let size = 10;
     let x = 0, y = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);
@@ -29,7 +29,7 @@ it('Three Dimension Matrix:Mark and Get same index on 3rd Axis', function (done)
     done();
 });
 
-it('Three Dimension Matrix:Mark and Get same index on 2nd Axis', function (done) {
+it('Three Dimension Matrix: Mark and Get same index on 2nd Axis', function (done) {
     let size = 10;
     let z = 0, y = 0, defaultChar = '0', markchar = 'D';;
     let target = new targetType(size, size, size, defaultChar, markchar);
@@ -42,7 +42,7 @@ it('Three Dimension Matrix:Mark and Get same index on 2nd Axis', function (done)
     done();
 });
 
-it('Three Dimension Matrix:Mark and Get same index on 1st Axis', function (done) {
+it('Three Dimension Matrix: Mark and Get same index on 1st Axis', function (done) {
     let size = 10;
     let z = 0, x = 0, defaultChar = '0', markchar = 'D';;
     let target = new targetType(size, size, size, defaultChar, markchar);
@@ -55,7 +55,7 @@ it('Three Dimension Matrix:Mark and Get same index on 1st Axis', function (done)
     done();
 });
 
-it('Three Dimension Matrix:Mark and Get 1Dimension Array on 1st Axis', function (done) {
+it('Three Dimension Matrix: Mark and Get 1Dimension Array on 1st Axis', function (done) {
     let size = 10;
     let z = 0, x = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);
@@ -70,7 +70,7 @@ it('Three Dimension Matrix:Mark and Get 1Dimension Array on 1st Axis', function 
     done();
 });
 
-it('Three Dimension Matrix:Mark and Get 1Dimension Array on 2nd Axis', function (done) {
+it('Three Dimension Matrix: Mark and Get 1Dimension Array on 2nd Axis', function (done) {
     let size = 10;
     let z = 0, y = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);
@@ -85,7 +85,7 @@ it('Three Dimension Matrix:Mark and Get 1Dimension Array on 2nd Axis', function 
     done();
 });
 
-it('Three Dimension Matrix:Mark and Get 1Dimension Array on 3rd Axis', function (done) {
+it('Three Dimension Matrix: Mark and Get 1Dimension Array on 3rd Axis', function (done) {
     let size = 10;
     let x = 0, y = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);
@@ -99,7 +99,7 @@ it('Three Dimension Matrix:Mark and Get 1Dimension Array on 3rd Axis', function 
     done();
 });
 
-it('Three Dimension Matrix:Mark and Get 2Dimension on 2nd & 3rd Axis', function (done) {
+it('Three Dimension Matrix: Mark and Get 2Dimension on 2nd & 3rd Axis', function (done) {
     let size = 10;
     let y = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);
@@ -119,7 +119,7 @@ it('Three Dimension Matrix:Mark and Get 2Dimension on 2nd & 3rd Axis', function 
     done();
 });
 
-it('Three Dimension Matrix:Mark and Get 2Dimension on 1st & 2nd Axis', function (done) {
+it('Three Dimension Matrix: Mark and Get 2Dimension on 1st & 2nd Axis', function (done) {
     let size = 10;
     let z = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);
@@ -139,7 +139,7 @@ it('Three Dimension Matrix:Mark and Get 2Dimension on 1st & 2nd Axis', function 
     done();
 });
 
-it('Three Dimension Matrix:Mark and Get 2Dimension on 1st & 3rd Axis', function (done) {
+it('Three Dimension Matrix: Mark and Get 2Dimension on 1st & 3rd Axis', function (done) {
     let size = 10;
     let x = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);

@@ -4,7 +4,7 @@
   "description": "This package is a graph representation of asset models linking each other for blazing fast queries",
   "main": "index.js",
   "scripts": {
-    "test": "npx mocha .\\ThreeDimensionMatrixSpec.js"
+    "test": "npx mocha .\\ThreeDimensionMatrixSpec.js .\\AssetModelSpec.js"
   },
   "repository": {
     "type": "git",
