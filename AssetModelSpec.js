@@ -3,6 +3,22 @@ let targetType = require('./AssetModel');
 let AssetList = ['A', 'B', 'C', 'D', 'E', 'F'];
 let RelationList = ['R1', 'R2', 'R3'];
 
+it('Asset Model: Validate default selector function works', function (done) {
+    let _AssetList = [{ name: 'A', id: 'A' }, { name: 'B', id: 'B' }, { name: 'C', id: 'C' }];
+    let _RelationList = [{ name: 'R1', id: 'R1' }, { name: 'R2', id: 'R2' }];
+    let model = new targetType(_AssetList, _RelationList);
+    model.markRelation(_AssetList[0], _RelationList[0], _AssetList[1]);//A---R1---B
+    model.markRelation(_AssetList[1], _RelationList[1], _AssetList[2]);//B---R2---C
+
+    expect(model.getRelationsBetween(_AssetList[0], _AssetList[1])).to.deep.equal([_RelationList[0]]);
+    expect(model.getRelationsBetween(_AssetList[1], _AssetList[2])).to.deep.equal([_RelationList[1]]);
+    
+    expect(model.getRelatedChildren(_AssetList[1], _RelationList[1])).to.deep.equal([_AssetList[2]]);
+
+    expect(model.getRelatedParents(_AssetList[1], _RelationList[0])).to.deep.equal([_AssetList[0]]);
+    done();
+});
+
 it('Asset Model: Validate assets can be linked and queried back', function (done) {
     let model = new targetType(AssetList, RelationList, (x) => x);
     model.markRelation(AssetList[0], RelationList[0], AssetList[1]);//A---R1---B
