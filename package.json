@@ -4,7 +4,8 @@
   "description": "This package is a graph representation of asset models linking each other for blazing fast queries",
   "main": "index.js",
   "scripts": {
-    "test": "npx mocha .\\ThreeDimensionMatrixSpec.js .\\AssetModelSpec.js"
+    "test": "nyc mocha .\\ThreeDimensionMatrixSpec.js .\\AssetModelSpec.js",
+    "coverage":"npx nyc report --reporter=html"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   "homepage": "https://github.com/LRagji/GraphAssetModel#readme",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1"
   }
 }
