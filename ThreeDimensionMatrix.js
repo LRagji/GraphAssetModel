@@ -1,5 +1,5 @@
 module.exports = class ThreeDimensionMatrix {
-    constructor(YMax, XMax, ZMax) {
+    constructor(YMax, XMax, ZMax, defaultValue = '0', markValue = '1') {
         this._constructReadOptimizedMatrix = this._constructReadOptimizedMatrix.bind(this);
         this.dimensionSize = {
             "YMax": YMax,
@@ -7,10 +7,12 @@ module.exports = class ThreeDimensionMatrix {
             "ZMax": ZMax
         };
 
-        this.matrix = this._constructReadOptimizedMatrix(this.dimensionSize.YMax, this.dimensionSize.XMax, this.dimensionSize.ZMax);
+        this.matrix = this._constructReadOptimizedMatrix(this.dimensionSize.YMax, this.dimensionSize.XMax, this.dimensionSize.ZMax, this._defaultValue);
 
         this.read = this.read.bind(this, this.matrix.model);
         this.mark = this.mark.bind(this, this.matrix.model);
+        this._defaultValue = defaultValue;
+        this._markValue = markValue;
     }
 
     _constructReadOptimizedMatrix(YaxisMax, XaxisMax, ZaxisMax, defaultValue = '0') {
@@ -53,7 +55,7 @@ module.exports = class ThreeDimensionMatrix {
         //1|0|1|Return 1D Array             |   Xn*3X
         //0|1|0|Return 2D Array             |   Yn*2X
 
-        
+
         //1|1|1 Return Single value |TimeComplexity:3X
         if (y !== undefined & x !== undefined & z !== undefined) {
             return model[y][x][z];
@@ -108,10 +110,10 @@ module.exports = class ThreeDimensionMatrix {
         }
     }
 
-    mark(fullModel, y, x, z, markValue = '1') {
+    mark(fullModel, y, x, z) {
         if (fullModel == undefined || y == undefined || x == undefined || z == undefined) {
             throw new Error("One or more parameters are null/undefined.");
         }
-        fullModel[y][x][z] = markValue;
+        fullModel[y][x][z] = this._markValue;
     }
 }
