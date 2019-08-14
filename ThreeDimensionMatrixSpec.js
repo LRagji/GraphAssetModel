@@ -62,7 +62,7 @@ it('Three Dimension Matrix: Mark and Get 1Dimension Array on 1st Axis', function
     let expectedArray = [];
     for (let counter = 0; counter < target.dimensionSize.YMax; counter++) {
         target.mark(counter, x, z, markchar);
-        expectedArray.push(markchar);
+        expectedArray.push(counter);
     }
 
     expect(target.read(undefined, x, z)).to.deep.equal(expectedArray);

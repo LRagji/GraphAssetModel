@@ -63,8 +63,8 @@ module.exports = class AssetModel {
     getRelatedParents(toAsset, withRelation) {
         let toIdx = this._findIndexOf(this._assetList, toAsset, this._identifierFunction);
         let relationIdx = this._findIndexOf(this._relationList, withRelation, this._identifierFunction);
-        let fromIds = this._model.read(undefined, toIdx, relationIdx);
+        let fromIndexs = this._model.read(undefined, toIdx, relationIdx);
 
-        return this._filterMap(fromIds, this._assetList);
+        return fromIndexs.map(idx => this._assetList[idx]);
     }
 }

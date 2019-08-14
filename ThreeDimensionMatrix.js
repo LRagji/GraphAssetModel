@@ -95,7 +95,9 @@ module.exports = class ThreeDimensionMatrix {
         if (y == undefined & x !== undefined & z !== undefined) {
             let Yaxis = new Array();
             for (let YCounter = 0; YCounter < model.length; YCounter++) {
-                Yaxis.push(model[YCounter][x][z]);
+                if (model[YCounter][x][z] === this._markValue) {
+                    Yaxis.push(YCounter);
+                }
             }
             return Yaxis;
         }
