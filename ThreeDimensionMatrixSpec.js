@@ -24,7 +24,7 @@ it('Three Dimension Matrix:Mark and Get same index on 3rd Axis', function (done)
         target.mark(y, x, counter);
     }
     for (let counter = 0; counter < target.dimensionSize.ZMax; counter++) {
-        expect(target.read(y, x, counter)).to.equal(markchar);
+        expect(target.read(y, x, counter)).to.equal(true);
     }
     done();
 });
@@ -37,7 +37,7 @@ it('Three Dimension Matrix:Mark and Get same index on 2nd Axis', function (done)
         target.mark(y, counter, z);
     }
     for (let counter = 0; counter < target.dimensionSize.XMax; counter++) {
-        expect(target.read(y, counter, z)).to.equal(markchar);
+        expect(target.read(y, counter, z)).to.equal(true);
     }
     done();
 });
@@ -50,7 +50,7 @@ it('Three Dimension Matrix:Mark and Get same index on 1st Axis', function (done)
         target.mark(counter, x, z);
     }
     for (let counter = 0; counter < target.dimensionSize.YMax; counter++) {
-        expect(target.read(counter, x, z)).to.equal(markchar);
+        expect(target.read(counter, x, z)).to.equal(true);
     }
     done();
 });
