@@ -35,24 +35,36 @@ module.exports = class AssetModel {
     getRelationsBetween(fromAsset, toAsset) {
         let fromIdx = this._findIndexOf(this._assetList, fromAsset, this._identifierFunction);
         let toIdx = this._findIndexOf(this._assetList, toAsset, this._identifierFunction);
-        let relationsIndexs = this._model.read(fromIdx, toIdx, undefined);
+        let results = [];
+        this._model.read(fromIdx, toIdx, undefined, (y, x, z) => {
+            results.push(this._relationList[z]);
+            return true;
+        });
 
-        return relationsIndexs.map(idx => this._relationList[idx]);
+        return results
     }
 
     getRelatedChildren(fromAsset, withRelation) {
         let fromIdx = this._findIndexOf(this._assetList, fromAsset, this._identifierFunction);
         let relationIdx = this._findIndexOf(this._relationList, withRelation, this._identifierFunction);
-        let toIndexs = this._model.read(fromIdx, undefined, relationIdx);
+        let results = [];
+        this._model.read(fromIdx, undefined, relationIdx, (y, x, z) => {
+            results.push(this._assetList[x]);
+            return true;
+        });
 
-        return toIndexs.map(idx => this._assetList[idx]);
+        return results;
     }
 
     getRelatedParents(toAsset, withRelation) {
         let toIdx = this._findIndexOf(this._assetList, toAsset, this._identifierFunction);
         let relationIdx = this._findIndexOf(this._relationList, withRelation, this._identifierFunction);
-        let fromIndexs = this._model.read(undefined, toIdx, relationIdx);
+        let results = [];
+        this._model.read(undefined, toIdx, relationIdx, (y, x, z) => {
+            results.push(this._assetList[y]);
+            return true;
+        });
 
-        return fromIndexs.map(idx => this._assetList[idx]);
+        return results;
     }
 }

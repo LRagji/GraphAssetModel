@@ -37,7 +37,7 @@ module.exports = class ThreeDimensionMatrix {
         }
     }
 
-    read(model, y, x, z) {
+    read(model, y, x, z, iteratorCallback) {
         //TODO:Find Time complexities for all read Operations
         //Given:
         // X: Time taken to access array element with index.Eg: arr[idx]
@@ -59,101 +59,24 @@ module.exports = class ThreeDimensionMatrix {
         if (model == undefined) {
             throw new Error("Model cannot be undefined");
         }
-        let switchValue = 0;
-        if (y !== undefined) switchValue += 4;
-        if (x !== undefined) switchValue += 2;
-        if (z !== undefined) switchValue += 1;
 
-        let Yaxis = [], Xaxis = [], Zaxis = [];
-        let YCounter = 0, XCounter = 0;
-        let YMap = new Map();
-        switch (switchValue) {
-            case 0: //0|0|0
-                this._generateLoop(y, model.length, (YIdx) => {
-                    this._generateLoop(x, model[YIdx].length, (XIdx) => {
-                        this._generateLoop(z, model[YIdx][XIdx].length, (ZIdx) => {
-                            if (model[YIdx][XIdx][ZIdx] == this._markValue) {
-                                let XMap = YMap.get(YIdx);
-                                if (XMap == undefined) XMap = new Map();
-                                let ZArray = XMap.get(XIdx);
-                                if (ZArray == undefined) ZArray = new Array();
-                                ZArray.push(ZIdx);
-                                XMap.set(XIdx, ZArray);
-                                YMap.set(YIdx, XMap);
-                            }
-                        });
-                    });
-                });
-                return YMap;
+        //TODO: Check for Negative number for x,y,z axes and should be less than Xmax, Ymax and Zmax
 
-            case 1: //0|0|1
-                Yaxis = new Array();
-                for (YCounter = 0; YCounter < model.length; YCounter++) {
-                    Xaxis = new Array();
-                    for (XCounter = 0; XCounter < model[YCounter].length; XCounter++) {
-                        Xaxis.push(model[YCounter][XCounter][z]);
-                    }
-                    Yaxis.push(Xaxis);
-                }
-                return Yaxis;
-
-            case 2: //0|1|0
-                Yaxis = new Array();
-                for (YCounter = 0; YCounter < model.length; YCounter++) {
-                    Yaxis.push(model[YCounter][x]);
-                }
-                return Yaxis;
-
-            case 3: //0|1|1
-                Yaxis = new Array();
-                for (YCounter = 0; YCounter < model.length; YCounter++) {
-                    if (model[YCounter][x][z] === this._markValue) {
-                        Yaxis.push(YCounter);
-                    }
-                }
-                return Yaxis;
-            case 4: //1|0|0
-                return model[y];
-
-            case 5: //1|0|1
-                Xaxis = new Array();
-                for (XCounter = 0; XCounter < model[y].length; XCounter++) {
-                    if (model[y][XCounter][z] === this._markValue) {
-                        Xaxis.push(XCounter);
-                    }
-                }
-                return Xaxis;
-
-            case 6: //1|1|0
-                Zaxis = model[y][x];
-                let returnResult = [];
-                Zaxis.forEach((element, idx) => {
-                    if (element === this._markValue) {
-                        returnResult.push(idx);
+        this._generateLoop(y, model.length, (YIdx) => {
+            return this._generateLoop(x, model[YIdx].length, (XIdx) => {
+                return this._generateLoop(z, model[YIdx][XIdx].length, (ZIdx) => {
+                    if (model[YIdx][XIdx][ZIdx] == this._markValue) {
+                        return iteratorCallback(YIdx, XIdx, ZIdx);
                     }
                 });
-                return returnResult;
-
-            case 7: //1|1|1
-                return model[y][x][z] === this._markValue;
-
-            default:
-                throw new Error("Unknown query!");
-        }
+            });
+        });
     }
 
     _generateLoop(parameter, defaultEP, iteratorFunction) {
-        if (parameter == undefined) {
-            //Scan Mode
-            for (let counter = 0; counter < defaultEP; counter++) {
-                iteratorFunction(counter);
-            }
-        }
-        else {
-            //Fetch Mode
-            for (let counter = parameter; counter < parameter; counter++) {
-                iteratorFunction(counter);
-            }
+        //Scan Or Fetch Mode
+        for (let counter = (parameter == undefined ? 0 : parameter); counter < (parameter == undefined ? defaultEP : (parameter + 1)); counter++) {
+            if (iteratorFunction(counter) === false) return false;
         }
     }
 

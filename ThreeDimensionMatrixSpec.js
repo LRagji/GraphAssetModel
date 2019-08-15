@@ -1,6 +1,10 @@
 let expect = require('chai').expect;
 let targetType = require('./ThreeDimensionMatrix');
 
+function convertToString(y, x, z) {
+    return y + ',' + x + ',' + z;
+}
+
 it('Three Dimension Matrix: Calculate correct memory size', function (done) {
     let size = 10;
     let charByteSize = 2;
@@ -17,13 +21,32 @@ it('Three Dimension Matrix: Validate markings are correct', function (done) {
     let target = new targetType(size, size, size);
 
     target.mark(0, 0, 0);
-    target.mark(size - 1, size - 1, size - 1);
+    target.mark(9, 9, 9);
 
-    let result = target.read(undefined, undefined, undefined);
+    let hits = [];
+    target.read(undefined, undefined, undefined, (y, x, z) => {
+        hits.push(convertToString(y, x, z));
+        return true;
+    });
 
-    expect(Array.from(result.keys())).to.deep.equal([0, size - 1]);
-    expect(Array.from(result.get(0).keys())).to.deep.equal([0]);
-    expect(Array.from(result.get(size - 1).keys())).to.deep.equal([size - 1]);
+    expect(hits).to.deep.equal(['0,0,0', '9,9,9']);
+    done();
+});
+
+it('Three Dimension Matrix: Validate iterator stops when asked to', function (done) {
+    let size = 10;
+    let target = new targetType(size, size, size);
+
+    target.mark(0, 0, 0);
+    target.mark(9, 9, 9);
+
+    let hits = [];
+    target.read(undefined, undefined, undefined, (y, x, z) => {
+        hits.push(convertToString(y, x, z));
+        return false;
+    });
+
+    expect(hits).to.deep.equal(['0,0,0']);
     done();
 });
 
@@ -32,12 +55,20 @@ it('Three Dimension Matrix: Mark and Get same index on 3rd Axis', function (done
     let size = 10;
     let x = 0, y = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);
+    let expectedResult = [];
     for (let counter = 0; counter < target.dimensionSize.ZMax; counter++) {
         target.mark(y, x, counter);
+        expectedResult.push(convertToString(y, x, counter));
     }
+
+    let actualResult = [];
     for (let counter = 0; counter < target.dimensionSize.ZMax; counter++) {
-        expect(target.read(y, x, counter)).to.equal(true);
+        target.read(y, x, counter, (y, x, z) => {
+            actualResult.push(convertToString(y, x, counter));
+            return true
+        });
     }
+    expect(actualResult).to.deep.equal(expectedResult);
     done();
 });
 
@@ -45,12 +76,20 @@ it('Three Dimension Matrix: Mark and Get same index on 2nd Axis', function (done
     let size = 10;
     let z = 0, y = 0, defaultChar = '0', markchar = 'D';;
     let target = new targetType(size, size, size, defaultChar, markchar);
+    let expectedResult = [];
     for (let counter = 0; counter < target.dimensionSize.XMax; counter++) {
         target.mark(y, counter, z);
+        expectedResult.push(convertToString(y, counter, z));
     }
+
+    let actualResult = [];
     for (let counter = 0; counter < target.dimensionSize.XMax; counter++) {
-        expect(target.read(y, counter, z)).to.equal(true);
+        target.read(y, counter, z, (y, x, z) => {
+            actualResult.push(convertToString(y, counter, z));
+            return true
+        });
     }
+    expect(actualResult).to.deep.equal(expectedResult);
     done();
 });
 
@@ -58,12 +97,20 @@ it('Three Dimension Matrix: Mark and Get same index on 1st Axis', function (done
     let size = 10;
     let z = 0, x = 0, defaultChar = '0', markchar = 'D';;
     let target = new targetType(size, size, size, defaultChar, markchar);
+    let expectedResult = [];
     for (let counter = 0; counter < target.dimensionSize.YMax; counter++) {
         target.mark(counter, x, z);
+        expectedResult.push(convertToString(counter, x, z));
     }
+
+    let actualResult = [];
     for (let counter = 0; counter < target.dimensionSize.YMax; counter++) {
-        expect(target.read(counter, x, z)).to.equal(true);
+        target.read(counter, x, z, (y, x, z) => {
+            actualResult.push(convertToString(counter, x, z));
+            return true
+        });
     }
+    expect(actualResult).to.deep.equal(expectedResult);
     done();
 });
 
@@ -77,7 +124,13 @@ it('Three Dimension Matrix: Mark and Get 1Dimension Array on 1st Axis', function
         expectedArray.push(counter);
     }
 
-    expect(target.read(undefined, x, z)).to.deep.equal(expectedArray);
+    let actualResult = [];
+    target.read(undefined, x, z, (y, x, z) => {
+        actualResult.push(y);
+        return true
+    })
+
+    expect(actualResult).to.deep.equal(expectedArray);
     done();
 });
 
@@ -91,7 +144,13 @@ it('Three Dimension Matrix: Mark and Get 1Dimension Array on 2nd Axis', function
         expectedArray.push(counter);
     }
 
-    expect(target.read(y, undefined, z)).to.deep.equal(expectedArray);
+    let actualResult = [];
+    target.read(y, undefined, z, (y, x, z) => {
+        actualResult.push(x);
+        return true
+    })
+
+    expect(actualResult).to.deep.equal(expectedArray);
     done();
 });
 
@@ -105,7 +164,13 @@ it('Three Dimension Matrix: Mark and Get 1Dimension Array on 3rd Axis', function
         expectedArray.push(counter);
     }
 
-    expect(target.read(y, x, undefined)).to.deep.equal(expectedArray);
+    let actualResult = [];
+    target.read(y, x, undefined, (y, x, z) => {
+        actualResult.push(z);
+        return true
+    })
+
+    expect(actualResult).to.deep.equal(expectedArray);
     done();
 });
 
@@ -113,18 +178,21 @@ it('Three Dimension Matrix: Mark and Get 2Dimension on 2nd & 3rd Axis', function
     let size = 10;
     let y = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);
-    let expected2DArray = [];
+    let expectedArray = [];
     for (let Xcounter = 0; Xcounter < target.dimensionSize.XMax; Xcounter++) {
-        let temp = [];
         for (let counter = 0; counter < target.dimensionSize.ZMax; counter++) {
             target.mark(y, Xcounter, counter);
-            temp.push(markchar);
+            expectedArray.push(convertToString(y, Xcounter, counter));
         }
-        expected2DArray.push(temp);
     }
 
-    let results = target.read(y, undefined, undefined);
-    expect(results).to.deep.equal(expected2DArray);
+    let actualResult = [];
+    target.read(y, undefined, undefined, (y, x, z) => {
+        actualResult.push(convertToString(y, x, z));
+        return true
+    })
+
+    expect(actualResult).to.deep.equal(expectedArray);
     done();
 });
 
@@ -132,18 +200,21 @@ it('Three Dimension Matrix: Mark and Get 2Dimension on 1st & 2nd Axis', function
     let size = 10;
     let z = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);
-    let expected2DArray = [];
+    let expectedArray = [];
     for (let Ycounter = 0; Ycounter < target.dimensionSize.YMax; Ycounter++) {
-        let temp = [];
         for (let counter = 0; counter < target.dimensionSize.XMax; counter++) {
             target.mark(Ycounter, counter, z);
-            temp.push(markchar);
+            expectedArray.push(convertToString(Ycounter, counter, z));
         }
-        expected2DArray.push(temp);
     }
 
-    let results = target.read(undefined, undefined, z);
-    expect(results).to.deep.equal(expected2DArray);
+    let actualResult = [];
+    target.read(undefined, undefined, z, (y, x, z) => {
+        actualResult.push(convertToString(y, x, z));
+        return true
+    })
+
+    expect(actualResult).to.deep.equal(expectedArray);
     done();
 });
 
@@ -151,17 +222,20 @@ it('Three Dimension Matrix: Mark and Get 2Dimension on 1st & 3rd Axis', function
     let size = 10;
     let x = 0, defaultChar = '0', markchar = 'D';
     let target = new targetType(size, size, size, defaultChar, markchar);
-    let expected2DArray = [];
+    let expectedArray = [];
     for (let Ycounter = 0; Ycounter < target.dimensionSize.YMax; Ycounter++) {
-        let temp = [];
         for (let counter = 0; counter < target.dimensionSize.ZMax; counter++) {
             target.mark(Ycounter, x, counter);
-            temp.push(markchar);
+            expectedArray.push(convertToString(Ycounter, x, counter));
         }
-        expected2DArray.push(temp);
     }
 
-    let results = target.read(undefined, x, undefined);
-    expect(results).to.deep.equal(expected2DArray);
+    let actualResult = [];
+    target.read(undefined, x, undefined, (y, x, z) => {
+        actualResult.push(convertToString(y, x, z));
+        return true
+    })
+
+    expect(actualResult).to.deep.equal(expectedArray);
     done();
 });
