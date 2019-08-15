@@ -11,6 +11,7 @@ module.exports = class ThreeDimensionMatrix {
 
         this.read = this.read.bind(this, this.matrix.model);
         this.mark = this.mark.bind(this, this.matrix.model);
+        this._generateLoop = this._generateLoop.bind(this);
         this._defaultValue = defaultValue;
         this._markValue = markValue;
     }
@@ -65,9 +66,25 @@ module.exports = class ThreeDimensionMatrix {
 
         let Yaxis = [], Xaxis = [], Zaxis = [];
         let YCounter = 0, XCounter = 0;
+        let YMap = new Map();
         switch (switchValue) {
             case 0: //0|0|0
-                return model;
+                this._generateLoop(y, model.length, (YIdx) => {
+                    this._generateLoop(x, model[YIdx].length, (XIdx) => {
+                        this._generateLoop(z, model[YIdx][XIdx].length, (ZIdx) => {
+                            if (model[YIdx][XIdx][ZIdx] == this._markValue) {
+                                let XMap = YMap.get(YIdx);
+                                if (XMap == undefined) XMap = new Map();
+                                let ZArray = XMap.get(XIdx);
+                                if (ZArray == undefined) ZArray = new Array();
+                                ZArray.push(ZIdx);
+                                XMap.set(XIdx, ZArray);
+                                YMap.set(YIdx, XMap);
+                            }
+                        });
+                    });
+                });
+                return YMap;
 
             case 1: //0|0|1
                 Yaxis = new Array();
@@ -95,7 +112,6 @@ module.exports = class ThreeDimensionMatrix {
                     }
                 }
                 return Yaxis;
-
             case 4: //1|0|0
                 return model[y];
 
@@ -120,9 +136,24 @@ module.exports = class ThreeDimensionMatrix {
 
             case 7: //1|1|1
                 return model[y][x][z] === this._markValue;
-                
+
             default:
                 throw new Error("Unknown query!");
+        }
+    }
+
+    _generateLoop(parameter, defaultEP, iteratorFunction) {
+        if (parameter == undefined) {
+            //Scan Mode
+            for (let counter = 0; counter < defaultEP; counter++) {
+                iteratorFunction(counter);
+            }
+        }
+        else {
+            //Fetch Mode
+            for (let counter = parameter; counter < parameter; counter++) {
+                iteratorFunction(counter);
+            }
         }
     }
 

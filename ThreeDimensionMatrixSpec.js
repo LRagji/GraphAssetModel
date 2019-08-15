@@ -1,7 +1,7 @@
 let expect = require('chai').expect;
 let targetType = require('./ThreeDimensionMatrix');
 
-it('Three Dimension Matrix: Calculate correct memory size & axis length', function (done) {
+it('Three Dimension Matrix: Calculate correct memory size', function (done) {
     let size = 10;
     let charByteSize = 2;
     let target = new targetType(size, size, size);
@@ -9,12 +9,24 @@ it('Three Dimension Matrix: Calculate correct memory size & axis length', functi
     expect(target.dimensionSize.XMax).to.equal(size);
     expect(target.dimensionSize.YMax).to.equal(size);
     expect(target.dimensionSize.ZMax).to.equal(size);
-    let targetMatrix = target.read(undefined, undefined, undefined);
-    expect(targetMatrix.length).to.equal(target.dimensionSize.YMax);
-    expect(targetMatrix[0].length).to.equal(target.dimensionSize.XMax);
-    expect(targetMatrix[0][0].length).to.equal(target.dimensionSize.ZMax);
     done();
 });
+
+it('Three Dimension Matrix: Validate markings are correct', function (done) {
+    let size = 10;
+    let target = new targetType(size, size, size);
+
+    target.mark(0, 0, 0);
+    target.mark(size - 1, size - 1, size - 1);
+
+    let result = target.read(undefined, undefined, undefined);
+
+    expect(Array.from(result.keys())).to.deep.equal([0, size - 1]);
+    expect(Array.from(result.get(0).keys())).to.deep.equal([0]);
+    expect(Array.from(result.get(size - 1).keys())).to.deep.equal([size - 1]);
+    done();
+});
+
 
 it('Three Dimension Matrix: Mark and Get same index on 3rd Axis', function (done) {
     let size = 10;
