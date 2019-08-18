@@ -12,7 +12,7 @@ it('Asset Model: Validate default selector function works', function (done) {
 
     expect(model.getRelationsBetween(_AssetList[0], _AssetList[1])).to.deep.equal([_RelationList[0]]);
     expect(model.getRelationsBetween(_AssetList[1], _AssetList[2])).to.deep.equal([_RelationList[1]]);
-    
+
     expect(model.getRelatedChildren(_AssetList[1], _RelationList[1])).to.deep.equal([_AssetList[2]]);
 
     expect(model.getRelatedParents(_AssetList[1], _RelationList[0])).to.deep.equal([_AssetList[0]]);
@@ -167,5 +167,43 @@ it('Asset Model: Validate no parent can be queried back when no parent exists', 
 
     let assets = model.getRelatedParents(AssetList[0], RelationList[0]);
     expect(assets.length).to.equal(0);
+    done();
+});
+
+it('Asset Model: Validate children with correct relations are returned when multiple children with same relation', function (done) {
+    let model = new targetType(AssetList, RelationList, (x) => x);
+    model.markRelation(AssetList[0], RelationList[0], AssetList[1]);//A---R1---B
+    model.markRelation(AssetList[1], RelationList[1], AssetList[2]);//B---R2---C
+    model.markRelation(AssetList[0], RelationList[0], AssetList[2]);//A---R1---C
+
+    let childrenWithRelations = model.getAllChildrenWithRelation(AssetList[0]);
+    expect(childrenWithRelations.size).to.equal(1);
+    expect(childrenWithRelations.get(RelationList[0])).to.deep.equal([AssetList[1], AssetList[2]]);
+
+    done();
+});
+
+it('Asset Model: Validate children with correct relations are returned when self referenced', function (done) {
+    let model = new targetType(AssetList, RelationList, (x) => x);
+    model.markRelation(AssetList[0], RelationList[0], AssetList[0]);//A---R1---A
+    model.markRelation(AssetList[0], RelationList[1], AssetList[0]);//A---R2---A
+
+    let childrenWithRelations = model.getAllChildrenWithRelation(AssetList[0]);
+    expect(childrenWithRelations.size).to.equal(2);
+    expect(childrenWithRelations.get(RelationList[0])).to.deep.equal([AssetList[0]]);
+    expect(childrenWithRelations.get(RelationList[1])).to.deep.equal([AssetList[0]]);
+    done();
+});
+
+it('Asset Model: Validate children with correct relations are returned when multiple children with different relations', function (done) {
+    let model = new targetType(AssetList, RelationList, (x) => x);
+    model.markRelation(AssetList[0], RelationList[0], AssetList[1]);//A---R1---B
+    model.markRelation(AssetList[1], RelationList[1], AssetList[2]);//B---R2---C
+    model.markRelation(AssetList[0], RelationList[1], AssetList[2]);//A---R2---C
+
+    let childrenWithRelations = model.getAllChildrenWithRelation(AssetList[0]);
+    expect(childrenWithRelations.size).to.equal(2);
+    expect(childrenWithRelations.get(RelationList[0])).to.deep.equal([AssetList[1]]);
+    expect(childrenWithRelations.get(RelationList[1])).to.deep.equal([AssetList[2]]);
     done();
 });

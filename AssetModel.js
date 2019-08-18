@@ -6,6 +6,9 @@ module.exports = class AssetModel {
         this.getRelationsBetween = this.getRelationsBetween.bind(this);
         this.getRelatedParents = this.getRelatedParents.bind(this);
         this.getRelatedChildren = this.getRelatedChildren.bind(this);
+        this.getAllChildrenWithRelation = this.getAllChildrenWithRelation.bind(this);
+        this.getAllParentsWithRelation = this.getAllParentsWithRelation.bind(this);
+        this.getAllParentAndChildren = this.getAllParentAndChildren.bind(this);
 
         this._findIndexOf = this._findIndexOf.bind(this);
         this._model = new ThreeDimensionMatrix(assetList.length, assetList.length, relationList.length);
@@ -67,4 +70,27 @@ module.exports = class AssetModel {
 
         return results;
     }
+
+    getAllChildrenWithRelation(fromAsset) {
+        let fromIdx = this._findIndexOf(this._assetList, fromAsset, this._identifierFunction);
+        let results = new Map();
+        this._model.read(fromIdx, undefined, undefined, (y, x, z) => {
+            let relationObject = this._relationList[z];
+            let child = this._assetList[x];
+            let childrens = results.has(relationObject) ? results.get(relationObject) : [];
+            childrens.push(child);
+            results.set(relationObject, childrens);
+            return true;
+        })
+        return results;
+    }
+
+    getAllParentsWithRelation(toAsset) {
+
+    }
+
+    getAllParentAndChildren(withRelation) {
+
+    }
+
 }
