@@ -100,7 +100,17 @@ module.exports = class AssetModel {
     }
 
     getAllParentAndChildren(withRelation) {
-
+        let relationIdx = this._findIndexOf(this._relationList, withRelation, this._identifierFunction)
+        let results = new Map();
+        this._model.read(undefined, undefined, relationIdx, (y, x, z) => {
+            let child = this._assetList[x];
+            let parent = this._assetList[y];
+            let children = results.has(parent) ? results.get(parent) : [];
+            children.push(child);
+            results.set(parent, children);
+            return true;
+        })
+        return results;
     }
 
 }
