@@ -65,7 +65,6 @@ module.exports = class ThreeDimensionMatrix {
         if (y == undefined || x == undefined || z == undefined) {
             throw new Error("One or more parameters are null/undefined.");
         }
-        let fullModel = this.matrix.model;
-        fullModel[y][x][z] = this._markValue;
+        this.matrix.model[y][x][z] = this._markValue;
     }
 }
