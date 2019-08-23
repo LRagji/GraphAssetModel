@@ -2,19 +2,26 @@ const bitsInByte = 8;
 
 module.exports = class BitStream {
 
-    constructor(numberofBits) {
+    constructor(YMax, XMax, ZMax) {
         this.getBit = this.getBit.bind(this);
         this.setBit = this.setBit.bind(this);
         this.clearBit = this.clearBit.bind(this);
 
+        this.dimensionSize = {
+            "YMax": YMax,
+            "XMax": XMax,
+            "ZMax": ZMax
+        };
+
+        this._numberOfBits= YMax * XMax * ZMax;
+        
         let numberOfBytes = 0;
-        if (numberofBits > 0) {
-            numberOfBytes = Math.ceil(Math.floor(numberofBits) / bitsInByte);
+        if (this._numberOfBits > 0) {
+            numberOfBytes = Math.ceil(Math.floor(this._numberOfBits) / bitsInByte);
         }
         this._stream = new Uint8ClampedArray(numberOfBytes);
 
         this.memorySize = Uint8ClampedArray.BYTES_PER_ELEMENT * this._stream.length;
-        this._numberOfBits = numberofBits;
     }
 
     getBit(bitNumber) {
