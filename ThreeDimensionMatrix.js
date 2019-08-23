@@ -9,8 +9,8 @@ module.exports = class ThreeDimensionMatrix {
 
         this.matrix = this._constructReadOptimizedMatrix(this.dimensionSize.YMax, this.dimensionSize.XMax, this.dimensionSize.ZMax, this._defaultValue);
 
-        this.read = this.read.bind(this, this.matrix.model);
-        this.mark = this.mark.bind(this, this.matrix.model);
+        this.read = this.read.bind(this);
+        this.mark = this.mark.bind(this);
         this._generateLoop = this._generateLoop.bind(this);
         this._defaultValue = defaultValue;
         this._markValue = markValue;
@@ -37,11 +37,9 @@ module.exports = class ThreeDimensionMatrix {
         }
     }
 
-    read(model, y, x, z, iteratorCallback) {
-        
-        if (model == undefined) {
-            throw new Error("Model cannot be undefined");
-        }
+    read(y, x, z, iteratorCallback) {
+
+        let model = this.matrix.model;
 
         //TODO: Check for Negative number for x,y,z axes and should be less than Xmax, Ymax and Zmax
 
@@ -63,10 +61,11 @@ module.exports = class ThreeDimensionMatrix {
         }
     }
 
-    mark(fullModel, y, x, z) {
-        if (fullModel == undefined || y == undefined || x == undefined || z == undefined) {
+    mark(y, x, z) {
+        if (y == undefined || x == undefined || z == undefined) {
             throw new Error("One or more parameters are null/undefined.");
         }
+        let fullModel = this.matrix.model;
         fullModel[y][x][z] = this._markValue;
     }
 }
