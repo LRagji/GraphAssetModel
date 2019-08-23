@@ -13,7 +13,7 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/BitStreamSpec.js"
+                "${workspaceFolder}/BitStreamMatrixSpec.js"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         },

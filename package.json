@@ -4,7 +4,7 @@
   "description": "This package is a graph representation of asset models linking each other for blazing fast queries",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha ./ThreeDimensionMatrixSpec.js ./AssetModelSpec.js ./BitStreamSpec.js",
+    "test": "nyc mocha ./ThreeDimensionMatrixSpec.js ./AssetModelSpec.js ./BitStreamMatrixSpec.js",
     "coverage": "npx nyc report --reporter=html"
   },
   "repository": {
@@ -30,7 +30,7 @@
     "exclude": [
       "ThreeDimensionMatrixSpec.js",
       "AssetModelSpec.js",
-      "BitStreamSpec.js"
+      "BitStreamMatrixSpec.js"
     ]
   }
 }
