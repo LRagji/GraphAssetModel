@@ -1,7 +1,8 @@
 let ThreeDimensionMatrix = require('./ThreeDimensionMatrix');
+let BitStreamMatrix = require('./BitStreamMatrix');
 
 module.exports = class AssetModel {
-    constructor(assetList, relationList, identifier = (obj) => obj.id) {
+    constructor(assetList, relationList, memoryOptimizeLevel = 0, identifier = (obj) => obj.id) {
         this.markRelation = this.markRelation.bind(this);
         this.getRelationsBetween = this.getRelationsBetween.bind(this);
         this.getRelatedParents = this.getRelatedParents.bind(this);
@@ -11,8 +12,21 @@ module.exports = class AssetModel {
         this.getAllParentAndChildren = this.getAllParentAndChildren.bind(this);
 
         this._findIndexOf = this._findIndexOf.bind(this);
-        this._model = new ThreeDimensionMatrix(assetList.length, assetList.length, relationList.length);
-        this.memorySize = this._model.matrix.memorySize;
+        switch (memoryOptimizeLevel) {
+            case 0:
+                this._model = new ThreeDimensionMatrix(assetList.length, assetList.length, relationList.length);
+                this.memorySize = this._model.matrix.memorySize;
+                break;
+            case 1:
+                this._model = new BitStreamMatrix(assetList.length, assetList.length, relationList.length);
+                this.memorySize = this._model.memorySize;
+                break;
+            default:
+                this._model = new ThreeDimensionMatrix(assetList.length, assetList.length, relationList.length);
+                this.memorySize = this._model.matrix.memorySize;
+                break;
+
+        }
         this._assetList = assetList;
         this._relationList = relationList;
         this._identifierFunction = identifier;
